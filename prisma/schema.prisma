@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  RIDER
+  DRIVER
+  ADMIN
+}
+
+enum BookingStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  password     String
+  name         String
+  phone        String?
+  role         UserRole   @default(RIDER)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  // Bookings where user is the rider
+  bookings     Booking[]  @relation("RiderBookings")
+  // Bookings where user is the driver
+  rides        Booking[]  @relation("DriverRides")
+  
+  // ✅ Add this field for the Ride relation
+  rideHistory  Ride[]     // Rides this user has driven
+  
+  riderReviews Review[]   @relation("RiderReviews")
+  driverReviews Review[]  @relation("DriverReviews")
+}
+
+model Booking {
+  id              String         @id @default(cuid())
+  riderId         String
+  rider           User           @relation("RiderBookings", fields: [riderId], references: [id])
+  driverId        String?
+  driver          User?          @relation("DriverRides", fields: [driverId], references: [id])
+  
+  pickupLocation  String
+  dropoffLocation String
+  pickupDate      DateTime
+  pickupTime      String
+  passengers      Int            @default(1)
+  status          BookingStatus  @default(PENDING)
+  fare            Float
+  distance        Float?
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  ride            Ride?
+}
+
+model Ride {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique
+  booking    Booking  @relation(fields: [bookingId], references: [id])
+  
+  driverId   String
+  driver     User     @relation(fields: [driverId], references: [id])
+  
+  startTime  DateTime @default(now())
+  endTime    DateTime?
+  route      Json?
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  rating     Int
+  comment    String?
+  riderId    String
+  rider      User     @relation("RiderReviews", fields: [riderId], references: [id])
+  driverId   String
+  driver     User     @relation("DriverReviews", fields: [driverId], references: [id])
+  bookingId  String
+  
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
