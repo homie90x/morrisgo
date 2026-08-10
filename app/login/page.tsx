@@ -1,7 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { setAuthData } from "@/lib/auth-client";
+import logo from "../logo.png";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -9,6 +13,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -35,11 +40,8 @@ export default function LoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Store token and user data
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      setAuthData(data.token, data.user);
 
-      // Redirect based on user role
       if (data.user.role === "DRIVER") {
         router.push("/rides");
       } else {
@@ -53,65 +55,95 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="text-center text-3xl font-bold text-gray-900">
-            Welcome to MorrisGo
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Or{" "}
-            <a href="/signup" className="text-blue-600 hover:text-blue-500">
-              create a new account
-            </a>
-          </p>
+    <main className="min-h-screen bg-gray-50">
+      <nav className="flex items-center justify-between px-8 pt-8 pb-4 bg-white">
+        <Link href="/signup" className="text-sm font-medium text-gray-500 hover:text-[#7a0019]">
+          Sign Up
+        </Link>
+        <Link href="/" className="flex items-center" aria-label="MorrisGo home">
+          <Image src={logo} alt="MorrisGo logo" width={140} height={40} className="h-10 w-auto" />
+        </Link>
+        <Link href="/bookings" className="text-sm text-gray-500 hover:text-[#7a0019]">
+          My Bookings
+        </Link>
+      </nav>
+
+      <div className="max-w-5xl mx-auto px-4 py-12 lg:py-16">
+        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
+          <section className="space-y-6">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#800000]">
+              Welcome back
+            </p>
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-[-0.04em] text-[#800000] leading-tight">
+              Sign in to continue your ride.
+            </h1>
+            <p className="text-lg text-gray-600">
+              Book rides, track your upcoming trips, and get where you need to go with MorrisGo.
+            </p>
+
+            <div className="rounded-[18px] bg-[#800000] p-6 text-white shadow-lg">
+              <div className="text-2xl font-semibold">Travel with confidence</div>
+              <div className="mt-2 text-sm text-white/90">
+                A simple and reliable experience for riders and drivers across Morris and nearby cities.
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Sign in</h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Enter your email and password to continue.
+              </p>
+            </div>
+
+            {error && (
+              <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <input
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 placeholder-gray-500 focus:border-[#800000] focus:outline-none focus:ring-2 focus:ring-[#800000]/20"
+                  placeholder="Email address"
+                />
+              </div>
+
+              <div>
+                <input
+                  type="password"
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 placeholder-gray-500 focus:border-[#800000] focus:outline-none focus:ring-2 focus:ring-[#800000]/20"
+                  placeholder="Password"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full rounded-xl bg-[#800000] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#660000] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isLoading ? "Signing in..." : "Sign in"}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-gray-600">
+              New here?{' '}
+              <Link href="/signup" className="font-medium text-[#800000] hover:text-[#660000]">
+                Create an account
+              </Link>
+            </p>
+          </section>
         </div>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            {error}
-          </div>
-        )}
-
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                className="appearance-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                required
-                value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-                className="appearance-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+    </main>
   );
 }
