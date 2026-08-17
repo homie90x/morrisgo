@@ -64,25 +64,7 @@ export default function SignupPage() {
       </nav>
 
       <div className="max-w-5xl mx-auto px-4 py-12 lg:py-16">
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
-          <section className="space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#800000]">
-              Join MorrisGo
-            </p>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-[-0.04em] text-[#800000] leading-tight">
-              Create your account and start traveling.
-            </h1>
-            <p className="text-lg text-gray-600">
-              Whether you want to book a ride or offer one, MorrisGo makes it simple.
-            </p>
-
-            <div className="rounded-[18px] bg-[#800000] p-6 text-white shadow-lg">
-              <div className="text-2xl font-semibold">Set up your profile in minutes</div>
-              <div className="mt-2 text-sm text-white/90">
-                Choose your role, add your details, and jump right into the ride experience.
-              </div>
-            </div>
-          </section>
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] items-center">
 
           <section className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
             <div className="mb-6">

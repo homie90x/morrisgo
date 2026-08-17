@@ -70,25 +70,7 @@ export default function LoginPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-12 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] items-center">
-          <section className="space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-[#800000]">
-              Welcome back
-            </p>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-[-0.04em] text-[#800000] leading-tight">
-              Sign in to continue your ride.
-            </h1>
-            <p className="text-lg text-gray-600">
-              Book rides, track your upcoming trips, and get where you need to go with MorrisGo.
-            </p>
-
-            <div className="rounded-[18px] bg-[#800000] p-6 text-white shadow-lg">
-              <div className="text-2xl font-semibold">Travel with confidence</div>
-              <div className="mt-2 text-sm text-white/90">
-                A simple and reliable experience for riders and drivers across Morris and nearby cities.
-              </div>
-            </div>
-          </section>
-
+          
           <section className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900">Sign in</h2>
