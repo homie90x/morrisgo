@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
+const jwtSecret = process.env.JWT_SECRET || "your-secret-key";
 
 function verifyToken(request: Request) {
     const token = request.headers.get("authorization")?.split(" ")[1];
     if (!token) return null;
 
     try {
-        return jwt.verify(token, process.env.JWT_SECRET || "your secret-key") as {
+        return jwt.verify(token, jwtSecret) as {
             userId: string;
             email: string;
             role: string;
